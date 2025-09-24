@@ -41,12 +41,8 @@ function ResultClient({ analysis }: { analysis: AnalysisResult }) {
   async function exportPng() {
     const node = document.getElementById(chartId);
     if (!node) return;
-    const { toPng } = await import("html-to-image");
-    const dataUrl = await toPng(node, { cacheBust: true, backgroundColor: "#0b1220" });
-    const link = document.createElement("a");
-    link.href = dataUrl;
-    link.download = `chart2signals-${analysis.meta.id}.png`;
-    link.click();
+    const { downloadElementAsPng } = await import("@/lib/utils/export");
+    await downloadElementAsPng(node, `chart2signals-${analysis.meta.id}.png`, "#0b1220");
   }
 
   function exportCsv() {
