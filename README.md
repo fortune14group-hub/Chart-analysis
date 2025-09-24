@@ -75,6 +75,28 @@ pnpm build
 - **Autentisering**: NextAuth med mockad e-post/magic link (`/auth/signin`, `/auth/dev`) och Pro-toggling via `/api/dev/pro`.
 - **Webhooks**: `/api/webhook` verifierar signatur (mock) + idempotens. Status läses via `/api/status` & `/status` (kräver token).
 
+## Priser & FAQ
+
+- `/pricing` visar prisplaner och vanliga frågor.
+- CTA-sticka i sidfoten leder snabbt tillbaka till uppladdningen.
+
+## Webhooks (mock)
+
+- POST `/api/webhook` (Stripe/Memberstack-redo, mock-verifiering).
+- Idempotens i minnet via `lib/utils/idempotency.ts`.
+- Status: GET `/api/status` (kräver `STATUS_TOKEN`) + dev-sida `/status`.
+
+## Inloggning (dev)
+
+- NextAuth (JWT) med mockad e-post/magisk länk.
+- `/auth/signin` begär länk → `/auth/dev` visar senaste länk (skickas även till server-logg).
+- PRO flaggas per e-postadress i in-memory store.
+
+## Dev: Toggle PRO
+
+- POST `/api/dev/pro` (kräver `DEV_ADMIN_TOKEN`).
+- Body: `{"email":"user@exempel.se","enable":true|false}` – `enable` kan utelämnas för toggle.
+
 ### Byt ut in-memory store
 
 Ersätt `persistAnalysis`/`getAnalysis` i `lib/utils/persist.ts` med valfri databas (t.ex. Prisma med SQLite/Postgres). Alla beroenden är samlade där.
@@ -106,6 +128,18 @@ pnpm test
   - WEBHOOK_PROVIDER=stripe
   - WEBHOOK_SECRET=<från leverantör>
   - WEBHOOK_IDEMP_TTL_MS=7200000
+
+## Deploy till Vercel
+
+```bash
+npm i -g vercel
+vercel login
+vercel
+vercel env add OPENAI_API_KEY
+vercel env add OPENAI_VISION_MODEL   # valfritt, default gpt-4o-mini
+vercel build
+vercel deploy --prebuilt --prod
+```
 
 ## Övrigt
 

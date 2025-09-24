@@ -20,6 +20,7 @@ export default function UploadForm({ action }: UploadFormProps) {
   return (
     <form action={formAction} className="space-y-6">
       <UploadDropzone name="chartFile" />
+      <p className="text-center text-xs opacity-70">{sv.upload.orCsv}</p>
       <div className="grid gap-4 sm:grid-cols-2">
         <MarketSelect />
         <ResolutionSelect />
@@ -82,13 +83,30 @@ function CsvFallback() {
 function SubmitButton() {
   const status = useFormStatus();
   const label = status.pending ? "Analyserar …" : sv.upload.analyze;
+  const steps = [sv.loading.step1, sv.loading.step2, sv.loading.step3];
   return (
-    <button
-      type="submit"
-      className="inline-flex items-center justify-center rounded-xl border px-5 py-2 text-sm font-medium hover:bg-accent disabled:opacity-60"
-      disabled={status.pending}
-    >
-      {label}
-    </button>
+    <div className="space-y-3">
+      {status.pending && (
+        <ol className="space-y-1 rounded-xl border bg-card/40 p-3 text-left text-xs">
+          {steps.map((step, index) => (
+            <li key={step} className="flex items-center gap-2">
+              <span
+                aria-hidden
+                className="inline-flex size-2 rounded-full bg-primary/80 animate-pulse"
+                style={{ animationDelay: `${index * 150}ms` }}
+              />
+              <span>{step}</span>
+            </li>
+          ))}
+        </ol>
+      )}
+      <button
+        type="submit"
+        className="inline-flex items-center justify-center rounded-xl border px-5 py-2 text-sm font-medium hover:bg-accent disabled:opacity-60"
+        disabled={status.pending}
+      >
+        {label}
+      </button>
+    </div>
   );
 }
