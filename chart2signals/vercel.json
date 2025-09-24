@@ -1,0 +1,8 @@
+{
+  "functions": {
+    "app/**": { "maxDuration": 30 }
+  },
+  "env": {
+    "OPENAI_VISION_MODEL": "gpt-4o-mini"
+  }
+}
